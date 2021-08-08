@@ -1,0 +1,78 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="theme-color" content="#0078E7"><meta name="author" content="lv wangjing"><meta name="copyright" content="lv wangjing"><meta name="generator" content="Hexo 5.4.0"><meta name="theme" content="hexo-theme-yun"><title>事件因果关系抽取现有的方法 | 小吕的小窝</title><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@900&amp;display=swap" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/star-markdown-css@0.1.25/dist/yun/yun-markdown.min.css"><script src="//at.alicdn.com/t/font_1140697_dxory92pb0h.js" async></script><script src="https://cdn.jsdelivr.net/npm/scrollreveal/dist/scrollreveal.min.js" defer></script><script>document.addEventListener("DOMContentLoaded", () => {
+  [".post-card",".post-content img"].forEach((target)=> {
+    ScrollReveal().reveal(target);
+  })
+});
+</script><link rel="icon" href="/yun.svg"><link rel="mask-icon" href="/yun.svg" color="#0078E7"><link rel="alternate icon" href="/yun.ico"><link rel="preload" href="/css/hexo-theme-yun.css" as="style"><link rel="preload" href="/js/utils.js" as="script"><link rel="preload" href="/js/hexo-theme-yun.js" as="script"><link rel="prefetch" href="/js/sidebar.js" as="script"><link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin><script id="yun-config">
+    const Yun = window.Yun || {};
+    window.CONFIG = {"hostname":"enchantedll.github.io","root":"/","title":"小吕的小窝","version":"1.6.2","mode":"auto","copycode":true,"page":{"isPost":true},"i18n":{"placeholder":"搜索...","empty":"找不到您查询的内容: ${query}","hits":"找到 ${hits} 条结果","hits_time":"找到 ${hits} 条结果（用时 ${time} 毫秒）"},"anonymous_image":"https://cdn.jsdelivr.net/gh/YunYouJun/cdn/img/avatar/none.jpg","say":{"api":"https://v1.hitokoto.cn","hitokoto":true},"fireworks":{"colors":["102, 167, 221","62, 131, 225","33, 78, 194"]}};
+  </script><link rel="stylesheet" href="/css/hexo-theme-yun.css"><script src="/js/utils.js"></script><script src="/js/hexo-theme-yun.js"></script><link rel="preconnect" href="https://www.google-analytics.com" crossorigin><script async src="https://www.googletagmanager.com/gtag/js?id=G-1LL0D86CY9"></script><script>if (CONFIG.hostname === location.hostname) {
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-1LL0D86CY9');
+}</script><script data-ad-client="ca-pub-2245427233262012" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script><script>(function(){
+  var bp = document.createElement('script');
+  var curProtocol = window.location.protocol.split(':')[0];
+  if (curProtocol === 'https') {
+    bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+  }
+  else {
+    bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+  }
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(bp, s);
+})();</script><!-- Google Tag Manager --><script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer','GTM-M9KWR9L');</script><!-- End Google Tag Manager --><meta name="description" content="事件因果关系抽取现有的方法，以及其优势和劣势（包括传统基于句法的方法、基于规则的方法以及基于序列标注模型的方法） 第一阶段基于句法和基于规则的方法只是有利于提取一因一果的句子，对于多因多果的提取方法较差。  因果关系自动抽取的研究起源于20世纪90年代，早期研究围绕基于规则的方法展开。Grishman (1990 )等人提出了PROTEUS工具，使用语法和语义信息自动抽取文本中的时序关系和因果关系">
+<meta property="og:type" content="article">
+<meta property="og:title" content="事件因果关系抽取现有的方法">
+<meta property="og:url" content="http://enchantedll.github.io/2021/08/08/%E4%BA%8B%E4%BB%B6%E5%9B%A0%E6%9E%9C%E5%85%B3%E7%B3%BB%E6%8A%BD%E5%8F%96%E7%8E%B0%E6%9C%89%E7%9A%84%E6%96%B9%E6%B3%95/index.html">
+<meta property="og:site_name" content="小吕的小窝">
+<meta property="og:description" content="事件因果关系抽取现有的方法，以及其优势和劣势（包括传统基于句法的方法、基于规则的方法以及基于序列标注模型的方法） 第一阶段基于句法和基于规则的方法只是有利于提取一因一果的句子，对于多因多果的提取方法较差。  因果关系自动抽取的研究起源于20世纪90年代，早期研究围绕基于规则的方法展开。Grishman (1990 )等人提出了PROTEUS工具，使用语法和语义信息自动抽取文本中的时序关系和因果关系">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2021-08-08T13:43:31.505Z">
+<meta property="article:modified_time" content="2021-08-08T13:59:21.042Z">
+<meta property="article:author" content="lv wangjing">
+<meta name="twitter:card" content="summary"><script src="/js/ui/mode.js"></script></head><body><script defer src="https://cdn.jsdelivr.net/npm/animejs@latest"></script><script defer src="/js/ui/fireworks.js"></script><canvas class="fireworks"></canvas><div class="container"><a class="sidebar-toggle hty-icon-button" id="menu-btn"><div class="hamburger hamburger--spin" type="button"><span class="hamburger-box"><span class="hamburger-inner"></span></span></div></a><div class="sidebar-toggle sidebar-overlay"></div><aside class="sidebar"><script src="/js/sidebar.js"></script><ul class="sidebar-nav"><li class="sidebar-nav-item sidebar-nav-toc hty-icon-button sidebar-nav-active" data-target="post-toc-wrap" title="文章目录"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-list-ordered"></use></svg></li><li class="sidebar-nav-item sidebar-nav-overview hty-icon-button" data-target="site-overview-wrap" title="站点概览"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-passport-line"></use></svg></li></ul><div class="sidebar-panel" id="site-overview-wrap"><div class="site-info fix-top"><a class="site-author-avatar" href="/about/" title="lv wangjing"><img width="96" loading="lazy" src="/images/avatar.jpg" alt="lv wangjing"><span class="site-author-status" title="不想上学">😭</span></a><div class="site-author-name"><a href="/about/">lv wangjing</a></div><span class="site-name">小吕的小窝</span><sub class="site-subtitle"></sub><div class="site-desciption"></div></div><nav class="site-state"><a class="site-state-item hty-icon-button icon-home" href="/" title="首页"><span class="site-state-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-home-4-line"></use></svg></span></a><div class="site-state-item"><a href="/archives/" title="归档"><span class="site-state-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-archive-line"></use></svg></span><span class="site-state-item-count">3</span></a></div><div class="site-state-item"><a href="/categories/" title="分类"><span class="site-state-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-folder-2-line"></use></svg></span><span class="site-state-item-count">0</span></a></div><div class="site-state-item"><a href="/tags/" title="标签"><span class="site-state-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-price-tag-3-line"></use></svg></span><span class="site-state-item-count">0</span></a></div><a class="site-state-item hty-icon-button" href="/about/#comment" title="留言板"><span class="site-state-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-clipboard-line"></use></svg></span></a></nav><hr style="margin-bottom:0.5rem"><div class="links-of-author"><a class="links-of-author-item hty-icon-button" rel="noopener" href="https://github.com/Enchantedll" title="GitHub" target="_blank" style="color:#181717"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-github-line"></use></svg></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="mailto:1345539017@qq.com" title="E-Mail" target="_blank" style="color:#8E71C1"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-mail-line"></use></svg></a></div><br><a class="links-item hty-icon-button" id="toggle-mode-btn" href="javascript:;" title="Mode" style="color: #f1cb64"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-contrast-2-line"></use></svg></a></div><div class="sidebar-panel sidebar-panel-active" id="post-toc-wrap"><div class="post-toc"><div class="post-toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AC%AC%E4%B8%80%E9%98%B6%E6%AE%B5"><span class="toc-number">1.</span> <span class="toc-text">第一阶段</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AC%AC%E4%BA%8C%E9%98%B6%E6%AE%B5"><span class="toc-number">2.</span> <span class="toc-text">第二阶段</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AC%AC%E4%B8%89%E9%98%B6%E6%AE%B5"><span class="toc-number">3.</span> <span class="toc-text">第三阶段</span></a></li></ol></div></div></div></aside><main class="sidebar-translate" id="content"><div id="post"><article class="hty-card post-block" itemscope itemtype="https://schema.org/Article"><link itemprop="mainEntityOfPage" href="http://Enchantedll.github.io/2021/08/08/%E4%BA%8B%E4%BB%B6%E5%9B%A0%E6%9E%9C%E5%85%B3%E7%B3%BB%E6%8A%BD%E5%8F%96%E7%8E%B0%E6%9C%89%E7%9A%84%E6%96%B9%E6%B3%95/"><span hidden itemprop="author" itemscope itemtype="https://schema.org/Person"><meta itemprop="name" content="lv wangjing"><meta itemprop="description"></span><span hidden itemprop="publisher" itemscope itemtype="https://schema.org/Organization"><meta itemprop="name" content="小吕的小窝"></span><header class="post-header"><h1 class="post-title" itemprop="name headline">事件因果关系抽取现有的方法<a class="post-edit-link" href="https://github.com/YunYouJun/yunyoujun.github.io/tree/hexo/source/_posts/事件因果关系抽取现有的方法.md" target="_blank" title="编辑" rel="noopener"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-edit-line"></use></svg></a></h1><div class="post-meta"><div class="post-time" style="display:inline-block"><span class="post-meta-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-calendar-line"></use></svg></span> <time title="创建时间：2021-08-08 21:43:31" itemprop="dateCreated datePublished" datetime="2021-08-08T21:43:31+08:00">2021-08-08</time></div><div class="post-classify"></div></div></header><section class="post-body" itemprop="articleBody"><div class="post-content markdown-body" style="--smc-primary:#0078E7;"><p>事件因果关系抽取现有的方法，以及其优势和劣势（包括传统基于句法的方法、基于规则的方法以及基于序列标注模型的方法）</p>
+<h2 id="第一阶段"><a href="#第一阶段" class="headerlink" title="第一阶段"></a>第一阶段</h2><p><strong>基于句法和基于规则的方法只是有利于提取一因一果的句子，对于多因多果的提取方法较差。</strong></p>
+<ul>
+<li><p>因果关系自动抽取的研究起源于20世纪90年代，早期研究围绕基于规则的方法展开。Grishman (1990 )等人提出了PROTEUS工具，使用语法和语义信息自动抽取文本中的时序关系和因果关系。</p>
+</li>
+<li><p>Kaplan（卡普兰）等(1991)将文本表示为命题的集合，每个命题包含一个谓词（通常为动词）和多个论元，通过定义命题模板的方式抽取命题中的因果关系。</p>
+</li>
+<li><p>Garcia （加西亚）（1997）提出了COATIS工具，该工具使用包含23个因果性动词的语言学模板自动从法语文本中抽取因果关系。</p>
+</li>
+<li><p>Chan.K等人(2005 ) U3]提出了基于语义期望的因果抽取系统SEKE，该系统使用了语义模板、句子模板、原因模板、后果模板四种不同层次的模板信息。</p>
+</li>
+<li><p>Girju ( 2002 ) 等人提出使用WordNet信息帮助自动发现表达因果含义的动词，用于抽取“NP 1-Verb-NP2”形式的因果关系，其中NP为名词短语，Verb为动词。</p>
+</li>
+</ul>
+<h2 id="第二阶段"><a href="#第二阶段" class="headerlink" title="第二阶段"></a>第二阶段</h2><p><strong>第二阶段主要使用基于统计与机器学习的方法。</strong><br><strong>缺点：准确率低，训练速度慢，需要大量数据集，并没有结合句子语义。</strong></p>
+<ul>
+<li><p>Girju（2003）提出了使用C4. 5决策树判断“NP 1-Verb-NP2”元组是否构成因果关系。</p>
+</li>
+<li><p>Chang等人（2004）使用无监督的方法从文本中学习短语指示因果关系的概率与词对出现在因果关系中的概率，作为额外特征训练贝叶斯分类器判断因果关系是否成立。</p>
+</li>
+<li><p>Blanco等人（2008）使用C4.5决策树结合Bagging方法进行因果关系识别。2007年，SemEval Task 4中提出了其中常见语义关系分类任务，其中包含因果关系，Girju等人使用SVM在该任务上取得了当时最佳的效果。</p>
+</li>
+<li><p>Sil等人（2010）提出了PREPOST系统，使用基于RBF核的SVM结合PMI特征判断因果关系是否成立。</p>
+</li>
+<li><p>付剑锋等人(2011)提出使用层叠条件随机场的方法，在事件序列上同时标注多个因果关系对。</p>
+</li>
+<li><p>Zhao等人（2016）提出基于因果连接词类别信息的受限隐朴素贝叶斯模型提升因果抽取任务的效果。</p>
+</li>
+<li><p>Tharini等人（2017）将CNN应用于因果关系抽取任务中。</p>
+</li>
+</ul>
+<h2 id="第三阶段"><a href="#第三阶段" class="headerlink" title="第三阶段"></a>第三阶段</h2><ul>
+<li><p>Kruengkrai等人（2017）进一步使用Multi-Column CNN（多柱卷积神经网络）并结合外部知识进行因果关系抽取。这一系列的研究将因果关系抽取建模为分类任务，输入是已经抽取好的事件或实体及其上下文，判断它们是否构成因果关系，而并未关注原因、结果事件或实体本身的抽取工作。</p>
+</li>
+<li><p>随着自然语言处理技术的发展，一些研究者开始尝试使用序列标注模型解决因果关系抽取问题。</p>
+</li>
+<li><p>Dasgupta等人（2018）提出将因果关系抽取建模为序列标注任务，在文本中直接标注出原因提及与结果提及的短语。该工作使用双向LSTM作为序列标注模型，并加入额外的语言学特征提升该任务上的效果。</p>
+</li>
+<li><p>Dunietz等人（2018）提出了DeepCx模型用于浅层语义分析，并在因果关系抽取任务上进行了测试。</p>
+</li>
+<li><p>Li等人（2019）提出使用带有自注意力机制的双向LSTM-CRF模型，结合经过领域迁移的词向量应用于因果抽取任务。基于序列标注模型的因果抽取方法是一种端到端的方法，可以直接由文本得到因果事件或实体对，为因果关系抽取研究指明了新的方向。</p>
+</li>
+</ul>
+</div><ul class="post-copyright"><li class="post-copyright-author"><strong>本文作者：</strong>lv wangjing</li><li class="post-copyright-link"><strong>本文链接：</strong><a href="http://enchantedll.github.io/2021/08/08/%E4%BA%8B%E4%BB%B6%E5%9B%A0%E6%9E%9C%E5%85%B3%E7%B3%BB%E6%8A%BD%E5%8F%96%E7%8E%B0%E6%9C%89%E7%9A%84%E6%96%B9%E6%B3%95/" title="事件因果关系抽取现有的方法">http://enchantedll.github.io/2021/08/08/%E4%BA%8B%E4%BB%B6%E5%9B%A0%E6%9E%9C%E5%85%B3%E7%B3%BB%E6%8A%BD%E5%8F%96%E7%8E%B0%E6%9C%89%E7%9A%84%E6%96%B9%E6%B3%95/</a></li><li class="post-copyright-license"><strong>版权声明：</strong>本博客所有文章除特别声明外，均默认采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" target="_blank" rel="noopener" title="CC BY-NC-SA 4.0 "><svg class="icon"><use xlink:href="#icon-creative-commons-line"></use></svg><svg class="icon"><use xlink:href="#icon-creative-commons-by-line"></use></svg><svg class="icon"><use xlink:href="#icon-creative-commons-nc-line"></use></svg><svg class="icon"><use xlink:href="#icon-creative-commons-sa-line"></use></svg></a> 许可协议。</li></ul></section></article><div class="post-nav"><div class="post-nav-item"></div><div class="post-nav-item"><a class="post-nav-next" href="/2021/08/08/%E6%97%A5%E5%B8%B8%E7%94%9F%E6%B4%BB%E4%B8%AD%E7%9A%84%E8%87%AA%E6%88%91%E5%91%88%E7%8E%B0/" rel="next" title="《日常生活中的自我呈现》"><span class="post-nav-text">《日常生活中的自我呈现》</span><svg class="icon" aria-hidden="true"><use xlink:href="#icon-arrow-right-s-line"></use></svg></a></div></div></div><div class="hty-card" id="comment"><div class="comment-tooltip text-center"><span>要不要和我说些什么？</span><br></div></div></main><footer class="sidebar-translate" id="footer"><div class="copyright"><span>&copy; 2021 </span><span class="with-love" id="animate"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-cloud-line"></use></svg></span><span class="author"> lv wangjing</span></div><div class="powered"><span>由 <a href="https://hexo.io" target="_blank" rel="noopener">Hexo</a> 驱动 v5.4.0</span><span class="footer-separator">|</span><span>主题 - <a rel="noopener" href="https://github.com/YunYouJun/hexo-theme-yun" target="_blank"><span>Yun</span></a> v1.6.2</span></div></footer><a class="hty-icon-button" id="back-to-top" aria-label="back-to-top" href="#"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-arrow-up-s-line"></use></svg><svg class="progress-circle-container" viewBox="0 0 100 100"><circle class="progress-circle" id="progressCircle" cx="50" cy="50" r="48" fill="none" stroke="#0078E7" stroke-width="2" stroke-linecap="round"></circle></svg></a></div></body></html>
